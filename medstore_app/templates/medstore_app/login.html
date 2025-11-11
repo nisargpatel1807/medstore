@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - MedStore</title>
+  {% load static %}
+<link rel="stylesheet" href="{% static 'medstore_app/style.css' %}">
+
+
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>MedStore</h1>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+        <a href="/login/">Login</a>
+        <a href="/signup/">Signup</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container form-box">
+    <h2>Login</h2>
+    {% if messages %}
+      {% for m in messages %}
+        <p class="success-msg">{{ m }}</p>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      <div>
+        <label>Username or Mobile:</label>
+        <input type="text" name="username_or_mobile" required>
+      </div>
+      <div>
+        <label>Password:</label>
+        <input type="password" name="password" required>
+      </div>
+      <button type="submit" class="btn">Login</button>
+    </form>
+
+    <p>New user? <a href="{% url 'medstore_app:signup' %}">Signup here</a></p>
+  </main>
+
+  <footer>
+    <p>© 2025 MedStore</p>
+  </footer>
+</body>
+</html>
