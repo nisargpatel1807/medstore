@@ -1,20 +1,24 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>About - MedStore</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'medstore_app/style.css' %}" />
-  </head>
+{% include 'medstore_app/header.html' %}
 
-  <body>
-    <header>
-      <h1>About MedStore</h1>
-    </header>
+<div class="container form-box">
+    <div class="card">
+        <h3 class="center">About MedStore</h3>
 
-    <p>
-      MedStore is a simple online medicine store made for academic learning
-      purposes. Here users can view available medicines and contact us for any
-      help.
-    </p>
-  </body>
-</html>
+        <p style="margin-top: 15px;">
+            MedStore is a simple online medicine store created for learning and
+            practice purposes. This project helps in understanding basic concepts
+            of Django such as models, views, templates, URL routing, and form
+            handling.
+        </p>
+
+        <p>
+            Users can create an account, log in, and contact us through a basic
+            message form. The goal of this mini project is to keep everything
+            easy and clean, suitable for college-level projects.
+        </p>
+
+       
+    </div>
+</div>
+
+{% include 'medstore_app/footer.html' %}
