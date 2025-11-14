@@ -1,49 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Signup - MedStore</title>
- {% load static %}
-<link rel="stylesheet" href="{% static 'medstore_app/style.css' %}">
+{% include 'medstore_app/header.html' %}
 
-</head>
-<body>
-  <header>
-    <div class="container">
-      <h1>MedStore</h1>
-      <nav>
-        <a href="/">Home</a>
-        <a href="/about/">About</a>
-        <a href="/contact/">Contact</a>
-        <a href="/login/">Login</a>
-        <a href="/signup/">Signup</a>
-      </nav>
-    </div>
-  </header>
+<div class="container form-box">
+  <div class="card">
+    <h3 class="center">Signup</h3>
 
-  <main class="container form-box">
-    <h2>Create Account</h2>
-    {% if messages %}
-      {% for m in messages %}
-        <p class="success-msg">{{ m }}</p>
-      {% endfor %}
-    {% endif %}
+    {% for m in messages %}
+      <p class="msg">{{ m }}</p>
+    {% endfor %}
 
     <form method="post">
       {% csrf_token %}
-      <div><label>Username:</label><input type="text" name="username" required></div>
-      <div><label>Mobile:</label><input type="text" name="mobile" required></div>
-      <div><label>Email:</label><input type="email" name="email" required></div>
-      <div><label>Password:</label><input type="password" name="password" required></div>
-      <div><label>Confirm Password:</label><input type="password" name="confirm" required></div>
-      <button type="submit" class="btn">Sign Up</button>
+
+      <label>Username</label>
+      <input type="text" name="username" required>
+
+      <label>Mobile</label>
+      <input type="text" name="mobile" required>
+
+      <label>Email</label>
+      <input type="email" name="email" required>
+
+      <label>Password</label>
+      <input type="password" name="password" required>
+
+      <label>Confirm Password</label>
+      <input type="password" name="confirm" required>
+
+      <button type="submit" class="btn">Signup</button>
     </form>
+  </div>
+</div>
 
-    <p>Already have an account? <a href="{% url 'medstore_app:login' %}">Login here</a></p>
-  </main>
-
-  <footer>
-    <p>© 2025 MedStore</p>
-  </footer>
-</body>
-</html>
+{% include 'medstore_app/footer.html' %}

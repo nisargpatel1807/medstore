@@ -1,77 +1,101 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth.hashers import make_password, check_password
 
-# simple list to hold temporary user data
-users_data = []
-
-def home(request):
-    # sample products list (for now static)
-    products = [
-        {"name": "Paracetamol 500mg", "price": "₹25", "desc": "Pain relief tablet"},
-        {"name": "Vitamin C Tablets", "price": "₹120", "desc": "Boosts immunity"},
-        {"name": "Cough Syrup", "price": "₹90", "desc": "Soothes dry cough"},
-        {"name": "Hand Sanitizer 100ml", "price": "₹45", "desc": "Kills 99.9% germs"},
-    ]
-    return render(request, 'medstore_app/home.html', {'products': products})
+from .models import User, Medicine, ContactMessage
 
 
-def about(request):
+def show_home_page(request):
+    # if request.COOKIES.get('user_email') is None:
+    #     return redirect('/login')
+
+    products = Medicine.objects.all()
+    user_email = request.COOKIES.get('user_email')
+    user = User.objects.filter(email=user_email).first()
+    return render(request, 'medstore_app/home.html', {'products': products, 'user': user})
+
+
+def show_login_page(request):
+    if request.method == "GET":
+        if request.COOKIES.get('user_email'):
+            return redirect('/')
+        return render(request, 'medstore_app/login.html')
+
+    return login(request)
+
+
+def login(request):
+    identifier = request.POST.get('identifier')
+    password = request.POST.get('password')
+
+    if not identifier or not password:
+        return render(request, 'medstore_app/login.html', {"error": "All fields are required"})
+
+    user = User.objects.filter(email=identifier).first()
+    if not user:
+        user = User.objects.filter(username=identifier).first()
+    if not user:
+        user = User.objects.filter(mobile=identifier).first()
+
+    if not user or not check_password(password, user.password):
+        return render(request, 'medstore_app/login.html', {"error": "Invalid login details"})
+
+    response = redirect('/')
+    response.set_cookie('user_email', user.email, max_age=7 * 24 * 60 * 60)
+    messages.success(request, f"Welcome {user.username}!")
+    return response
+
+
+
+def show_signup_page(request):
+    if request.method == "GET":
+        if request.COOKIES.get('user_email'):
+            return redirect('/')
+        return render(request, 'medstore_app/signup.html')
+
+    return signup(request)
+
+
+def signup(request):
+    username = request.POST.get('username')
+    mobile = request.POST.get('mobile')
+    email = request.POST.get('email')
+    password = request.POST.get('password')
+    confirm = request.POST.get('confirm')
+
+    if not (username and mobile and email and password and confirm):
+        return render(request, 'medstore_app/signup.html', {"error": "All fields are required"})
+
+    if password != confirm:
+        return render(request, 'medstore_app/signup.html', {"error": "Passwords do not match"})
+
+    if User.objects.filter(email=email).exists():
+        return render(request, 'medstore_app/signup.html', {"error": "Email already exists"})
+    if User.objects.filter(username=username).exists():
+        return render(request, 'medstore_app/signup.html', {"error": "Username taken"})
+    if User.objects.filter(mobile=mobile).exists():
+        return render(request, 'medstore_app/signup.html', {"error": "Mobile already used"})
+
+    hashed_password = make_password(password)
+    User.objects.create(username=username, mobile=mobile, email=email, password=hashed_password)
+    return render(request, 'medstore_app/signup.html', {"success": "Account created! You can login now."})
+
+
+
+def show_about_page(request):
     return render(request, 'medstore_app/about.html')
 
 
-def contact(request):
-    return render(request, 'medstore_app/contact.html')
-
-
-def signup_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        mobile = request.POST.get('mobile')
+def show_contact_page(request):
+    if request.method == "POST":
+        name = request.POST.get('name')
         email = request.POST.get('email')
-        password = request.POST.get('password')
-        confirm = request.POST.get('confirm')
+        message_text = request.POST.get('message')
 
-        if not username or not mobile or not email or not password or not confirm:
-            messages.error(request, "Please fill all fields.")
-            return render(request, 'medstore_app/signup.html')
+        if not (name and email and message_text):
+            return render(request, 'medstore_app/contact.html', {"error": "Please fill all fields"})
 
-        if password != confirm:
-            messages.error(request, "Passwords do not match.")
-            return render(request, 'medstore_app/signup.html')
+        ContactMessage.objects.create(name=name, email=email, message=message_text)
+        return render(request, 'medstore_app/contact.html', {"success": "Message sent successfully!"})
 
-        for u in users_data:
-            if u['username'] == username or u['mobile'] == mobile or u['email'] == email:
-                messages.error(request, "User already exists.")
-                return render(request, 'medstore_app/signup.html')
-
-        users_data.append({
-            "username": username,
-            "mobile": mobile,
-            "email": email,
-            "password": password
-        })
-        messages.success(request, "Account created successfully! You can now login.")
-        return redirect('medstore_app:login')
-
-    return render(request, 'medstore_app/signup.html')
-
-
-def login_view(request):
-    if request.method == 'POST':
-        username_or_mobile = request.POST.get('username_or_mobile')
-        password = request.POST.get('password')
-
-        for u in users_data:
-            if (u['username'] == username_or_mobile or u['mobile'] == username_or_mobile) and u['password'] == password:
-                messages.success(request, f"Welcome {u['username']}! Logged in successfully.")
-                return redirect('medstore_app:home')
-
-        messages.error(request, "Invalid username/mobile or password.")
-        return render(request, 'medstore_app/login.html')
-
-    return render(request, 'medstore_app/login.html')
-
-
-def logout_view(request):
-    messages.info(request, "You have been logged out.")
-    return redirect('medstore_app:home')
+    return render(request, 'medstore_app/contact.html')

@@ -1,39 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Contact - MedStore</title>
-  {% load static %}
-<link rel="stylesheet" href="{% static 'medstore_app/style.css' %}">
+{% include 'medstore_app/header.html' %}
 
+<div class="container form-box">
+  <div class="card">
+    <h3 class="center">Contact Us</h3>
 
-</head>
-<body>
-  <header>
-    <div class="container">
-      <h1>MedStore</h1>
-      <nav>
-        <a href="/">Home</a>
-        <a href="/about/">About</a>
-        <a href="/contact/">Contact</a>
-        <a href="/login/">Login</a>
-        <a href="/signup/">Signup</a>
-      </nav>
-    </div>
-  </header>
+    {% for m in messages %}
+      <p class="msg">{{ m }}</p>
+    {% endfor %}
 
-  <main class="container">
-    <h2>Contact Us</h2>
-    <p>any query contect us</p>
-    <div class="contact-box">
-      <p><strong>Email:</strong> medstorehelp@gmail.com</p>
-      <p><strong>Phone:</strong> +91 98765 43210</p>
-      <p><strong>Address:</strong> Ahmedabad, Gujarat</p>
-    </div>
-  </main>
+    <form method="post">
+      {% csrf_token %}
+      <label>Your Name</label>
+      <input type="text" name="name" required>
 
-  <footer>
-    <p>MedStore</p>
-  </footer>
-</body>
-</html>
+      <label>Your Email</label>
+      <input type="email" name="email" required>
+
+      <label>Your Message</label>
+      <textarea name="message"></textarea>
+
+      <button type="submit" class="btn">Send</button>
+    </form>
+  </div>
+</div>
+
+{% include 'medstore_app/footer.html' %}

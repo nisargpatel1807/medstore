@@ -1,63 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>MedStore - Home</title>
- {% load static %}
-<link rel="stylesheet" href="{% static 'medstore_app/style.css' %}">
+{% include 'medstore_app/header.html' %}
 
-</head>
-<body>
-  <header>
-    <div class="container">
-      <h1>MedStore</h1>
-      <nav>
-        <a href="/">Home</a>
-        <a href="/about/">About</a>
-        <a href="/contact/">Contact</a>
-        <a href="/login/">Login</a>
-        <a href="/signup/">Signup</a>
-      </nav>
-    </div>
-  </header>
+<div class="container">
+  <h2>Available Medicines</h2>
 
-  <main class="container">
-    <h2>Popular Medicines</h2>
-    <p class="intro">Small demo list — this page is intentionally simple for the class project.</p>
-
-    <div class="products">
+  <div class="product-grid">
+    {% for p in products %}
       <div class="product-card">
-        <h3>Paracetamol 500mg</h3>
-        <p>Pain relief tablet</p>
-        <p class="price">₹25</p>
-        <button class="btn">Add to Cart</button>
+        <h3>{{ p.name }}</h3>
+        <p>{{ p.description }}</p>
+        <p class="price">₹{{ p.price }}</p>
       </div>
+    {% empty %}
+      <p>No products available.</p>
+    {% endfor %}
+  </div>
+</div>
 
-      <div class="product-card">
-        <h3>Vitamin C Tablets</h3>
-        <p>Boosts immunity</p>
-        <p class="price">₹120</p>
-        <button class="btn">Add to Cart</button>
-      </div>
-
-      <div class="product-card">
-        <h3>Cough Syrup</h3>
-        <p>Soothes dry cough</p>
-        <p class="price">₹90</p>
-        <button class="btn">Add to Cart</button>
-      </div>
-
-      <div class="product-card">
-        <h3>Hand Sanitizer 100ml</h3>
-        <p>Kills 99.9% germs</p>
-        <p class="price">₹45</p>
-        <button class="btn">Add to Cart</button>
-      </div>
-    </div>
-  </main>
-
-  <footer>
-    <p>Made by Nisarg — Demo project</p>
-  </footer>
-</body>
-</html>
+{% include 'medstore_app/footer.html' %}
