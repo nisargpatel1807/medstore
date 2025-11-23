@@ -1,0 +1,20 @@
+{% include 'medstore_app/header.html' %}
+<div class="container form-box">
+  <div class="card">
+    <h3>Admin Login</h3>
+
+    {% if error %}<p class="msg">{{ error }}</p>{% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      <label>Email</label>
+      <input type="email" name="email" required>
+
+      <label>Password</label>
+      <input type="password" name="password" required>
+
+      <button class="btn" type="submit">Login</button>
+    </form>
+  </div>
+</div>
+{% include 'medstore_app/footer.html' %}

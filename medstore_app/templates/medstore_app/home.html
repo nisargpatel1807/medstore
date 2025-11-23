@@ -1,19 +1,50 @@
 {% include 'medstore_app/header.html' %}
 
 <div class="container">
-  <h2>Available Medicines</h2>
 
-  <div class="product-grid">
-    {% for p in products %}
-      <div class="product-card">
-        <h3>{{ p.name }}</h3>
-        <p>{{ p.description }}</p>
-        <p class="price">₹{{ p.price }}</p>
-      </div>
-    {% empty %}
-      <p>No products available.</p>
-    {% endfor %}
-  </div>
+    {% if messages %}
+        {% for m in messages %}
+            <p class="msg">{{ m }}</p>
+        {% endfor %}
+    {% endif %}
+
+    {% if user %}
+        <p>Welcome, <strong>{{ user.username }}</strong></p>
+    {% else %}
+        <p><a href="{% url 'medstore_app:login' %}">Login</a> to place orders</p>
+    {% endif %}
+
+    <!-- rest of page -->
+
+
+    <h2>Available Medicines</h2>
+
+    <div class="product-grid">
+
+        {% for p in products %}
+            <div class="product-card">
+
+                <h3>{{ p.name }}</h3>
+
+                <p>{{ p.description|default:"No description available." }}</p>
+
+                <p class="price">₹{{ p.price }}</p>
+
+                <form method="post" action="{% url 'medstore_app:create_order' p.id %}">
+                    {% csrf_token %}
+
+                    <label>Qty</label>
+                    <input type="number" name="quantity" min="1" value="1" style="width:60px;">
+
+                    <button class="btn" type="submit">Order Now</button>
+                </form>
+
+            </div>
+        {% empty %}
+            <p>No medicines available. Please check again later.</p>
+        {% endfor %}
+
+    </div>
 </div>
 
 {% include 'medstore_app/footer.html' %}

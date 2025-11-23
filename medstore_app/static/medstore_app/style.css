@@ -142,3 +142,160 @@ body {
   margin-top: 40px;
   font-size: 14px;
 }
+/* Reset */
+body {
+    margin: 0;
+    padding: 0;
+    background: #f2f4f7;
+    font-family: Arial, sans-serif;
+}
+
+/* Container */
+.container {
+    width: 95%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Header */
+.site-header {
+    background: #1a6bc2;
+    padding: 14px 0;
+}
+
+.site-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand {
+    margin: 0;
+    font-size: 26px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.site-header nav a {
+    color: #fff;
+    margin-left: 15px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.site-header nav a:hover {
+    text-decoration: underline;
+}
+
+/* Footer */
+.site-footer {
+    background: #222;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+    margin-top: 30px;
+}
+
+/* Cards (admin + user both) */
+.card {
+    background: white;
+    padding: 18px;
+    border-radius: 6px;
+    margin-top: 20px;
+    border: 1px solid #e1e1e1;
+}
+
+/* Forms */
+form label {
+    display: block;
+    margin-top: 8px;
+    font-weight: bold;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 4px;
+    border: 1px solid #c9c9c9;
+    border-radius: 4px;
+}
+
+.btn {
+    display: inline-block;
+    background: #1a6bc2;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.btn:hover {
+    background: #0d5aa5;
+}
+
+/* Messages (success / error) */
+.msg {
+    background: #e9f3ff;
+    border-left: 4px solid #1a6bc2;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+/* Product grid */
+.product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.product-card {
+    width: 200px;
+    background: white;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+.product-card h3 {
+    font-size: 18px;
+    color: #1a6bc2;
+}
+
+.price {
+    font-size: 17px;
+    font-weight: bold;
+    color: #1a6bc2;
+}
+
+/* Admin table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+}
+
+table th, table td {
+    border: 1px solid #d1d1d1;
+    padding: 8px;
+    text-align: left;
+}
+
+table th {
+    background: #f0f3f7;
+    font-weight: bold;
+}
+
+/* Links inside admin pages */
+.container a {
+    margin-right: 10px;
+    text-decoration: none;
+    color: #1a6bc2;
+}
+
+.container a:hover {
+    text-decoration: underline;
+}

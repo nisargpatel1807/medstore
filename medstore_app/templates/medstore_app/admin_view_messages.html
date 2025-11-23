@@ -1,0 +1,14 @@
+{% include 'medstore_app/header.html' %}
+<div class="container">
+  <div class="card">
+    <h3>All Messages</h3>
+    <ul>
+      {% for m in messages %}
+        <li><strong>{{ m.name }}</strong> ({{ m.email }}) — {{ m.message }}</li>
+      {% empty %}
+        <li>No messages found</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% include 'medstore_app/footer.html' %}

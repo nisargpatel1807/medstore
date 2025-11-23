@@ -1,0 +1,26 @@
+{% include 'medstore_app/header.html' %}
+<div class="container">
+  <div class="card">
+    <h3>Admin Dashboard</h3>
+    <p>Total Users: {{ total_users }}</p>
+    <p>Total Medicines: {{ total_products }}</p>
+    <p>Total Orders: {{ total_orders }}</p>
+
+    <h4>Manage</h4>
+    <a href="{% url 'medstore_app:admin_add_category' %}">Add Category</a> |
+    <a href="{% url 'medstore_app:admin_add_medicine' %}">Add Medicine</a> |
+    <a href="{% url 'medstore_app:admin_messages' %}">View Messages</a> |
+    <a href="{% url 'medstore_app:admin_orders' %}">View Orders</a> |
+    <a href="{% url 'medstore_app:admin_logout' %}">Logout</a>
+
+    <h4 style="margin-top:20px;">Recent Messages</h4>
+    <ul>
+      {% for m in recent_messages %}
+        <li>{{ m.name }} — {{ m.message }}</li>
+      {% empty %}
+        <li>No messages</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% include 'medstore_app/footer.html' %}
