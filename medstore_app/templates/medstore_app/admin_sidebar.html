@@ -1,0 +1,14 @@
+<aside class="admin-sidebar">
+    <div class="admin-logo">
+        <h2>MedStore Admin</h2>
+    </div>
+
+    <ul class="admin-menu">
+        <li><a href="{% url 'medstore_app:admin_dashboard' %}">Dashboard</a></li>
+        <li><a href="{% url 'medstore_app:admin_add_category' %}">Add Category</a></li>
+        <li><a href="{% url 'medstore_app:admin_add_medicine' %}">Add Medicine</a></li>
+        <li><a href="{% url 'medstore_app:admin_messages' %}">Messages</a></li>
+        <li><a href="{% url 'medstore_app:admin_orders' %}">Orders</a></li>
+        <li><a href="{% url 'medstore_app:admin_logout' %}">Logout</a></li>
+    </ul>
+</aside>

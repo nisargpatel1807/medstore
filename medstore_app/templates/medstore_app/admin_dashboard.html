@@ -1,26 +1,42 @@
 {% include 'medstore_app/header.html' %}
-<div class="container">
-  <div class="card">
-    <h3>Admin Dashboard</h3>
-    <p>Total Users: {{ total_users }}</p>
-    <p>Total Medicines: {{ total_products }}</p>
-    <p>Total Orders: {{ total_orders }}</p>
+{% load static %}
 
-    <h4>Manage</h4>
-    <a href="{% url 'medstore_app:admin_add_category' %}">Add Category</a> |
-    <a href="{% url 'medstore_app:admin_add_medicine' %}">Add Medicine</a> |
-    <a href="{% url 'medstore_app:admin_messages' %}">View Messages</a> |
-    <a href="{% url 'medstore_app:admin_orders' %}">View Orders</a> |
-    <a href="{% url 'medstore_app:admin_logout' %}">Logout</a>
 
-    <h4 style="margin-top:20px;">Recent Messages</h4>
-    <ul>
-      {% for m in recent_messages %}
-        <li>{{ m.name }} — {{ m.message }}</li>
-      {% empty %}
-        <li>No messages</li>
-      {% endfor %}
-    </ul>
-  </div>
+<div class="admin-container">
+
+    {% include 'medstore_app/admin_sidebar.html' %}
+
+    <main class="admin-main">
+        <h2 class="admin-title">Dashboard</h2>
+
+        <div class="admin-cards">
+            <div class="admin-card">
+                <h3>Total Users</h3>
+                <p>{{ total_users }}</p>
+            </div>
+
+            <div class="admin-card">
+                <h3>Total Medicines</h3>
+                <p>{{ total_products }}</p>
+            </div>
+
+            <div class="admin-card">
+                <h3>Total Orders</h3>
+                <p>{{ total_orders }}</p>
+            </div>
+        </div>
+
+        <div class="admin-section">
+            <h3>Recent Messages</h3>
+            <ul>
+                {% for m in recent_messages %}
+                    <li><strong>{{ m.name }}:</strong> {{ m.message|truncatechars:70 }}</li>
+                {% empty %}
+                    <li>No messages available.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </main>
 </div>
+
 {% include 'medstore_app/footer.html' %}
