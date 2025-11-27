@@ -9,21 +9,15 @@
       <p class="msg">{{ m }}</p>
     {% endfor %}
 
-    <form method="post" action="">
-      {% csrf_token %}
+  <form method="post" action="{% url 'medstore_app:login' %}">
+  {% csrf_token %}
+  <label>Username / Mobile / Email</label>
+  <input type="text" name="identifier" required>
+  <label>Password</label>
+  <input type="password" name="password" required>
+  <button type="submit" class="btn">Login</button>
+</form>
 
-      <label>Username / Mobile / Email</label>
-      <input type="text" name="identifier" required>
-
-      <label>Password</label>
-      <input type="password" name="password" required>
-
-      <button type="submit" class="btn">Login</button>
-
-      <p class="small">
-        New user? <a href="/signup/">Signup</a>
-      </p>
-    </form>
   </div>
 </div>
 
