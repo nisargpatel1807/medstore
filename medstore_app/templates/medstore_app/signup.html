@@ -4,29 +4,41 @@
   <div class="card">
     <h3 class="center">Signup</h3>
 
+    {% if error %}
+      <p class="msg">{{ error }}</p>
+    {% endif %}
+    {% if success %}
+      <p class="msg">{{ success }}</p>
+    {% endif %}
+
     {% for m in messages %}
       <p class="msg">{{ m }}</p>
     {% endfor %}
 
-    <form method="post">
+    <form method="post" action="{% url 'medstore_app:signup' %}">
       {% csrf_token %}
 
-      <label>Username</label>
-      <input type="text" name="username" required>
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required>
 
-      <label>Mobile</label>
-      <input type="text" name="mobile" required>
+      <label for="mobile">Mobile Number</label>
+      <input type="text" id="mobile" name="mobile" required>
 
-      <label>Email</label>
-      <input type="email" name="email" required>
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email" required>
 
-      <label>Password</label>
-      <input type="password" name="password" required>
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required>
 
-      <label>Confirm Password</label>
-      <input type="password" name="confirm" required>
+      <label for="confirm">Confirm Password</label>
+      <input type="password" id="confirm" name="confirm" required>
 
       <button type="submit" class="btn">Signup</button>
+
+      <p class="small">
+        Already have an account?
+        <a href="{% url 'medstore_app:login' %}">Login</a>
+      </p>
     </form>
   </div>
 </div>
