@@ -4,7 +4,6 @@ from django.contrib import admin
 from django.contrib import admin
 from .models import User, Category, Medicine, Order, OrderItem, ContactMessage
 
-# Register models so they appear in admin panel
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):

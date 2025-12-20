@@ -22,6 +22,4 @@ urlpatterns = [
     path('admin-panel/orders/accept/<int:order_id>/', views.admin_accept_order, name='admin_accept_order'),
     path('admin-panel/orders/deliver/<int:order_id>/', views.admin_deliver_order, name='admin_deliver_order'),
 
-
 ]
-
