@@ -9,13 +9,10 @@
     {% endif %}
 
     {% if user %}
-        <p>Welcome, <strong>{{ user.username }}</strong></p>
+        <p>Welcome, <strong>{{ user.username }}</strong>!</p>
     {% else %}
         <p><a href="{% url 'medstore_app:login' %}">Login</a> to place orders</p>
     {% endif %}
-
-    <!-- rest of page -->
-
 
     <h2>Available Medicines</h2>
 
@@ -25,17 +22,13 @@
             <div class="product-card">
 
                 <h3>{{ p.name }}</h3>
-
                 <p>{{ p.description|default:"No description available." }}</p>
-
                 <p class="price">₹{{ p.price }}</p>
 
                 <form method="post" action="{% url 'medstore_app:create_order' p.id %}">
                     {% csrf_token %}
-
-                    <label>Qty</label>
+                    <label>Qty:</label>
                     <input type="number" name="quantity" min="1" value="1" style="width:60px;">
-
                     <button class="btn" type="submit">Order Now</button>
                 </form>
 
@@ -44,7 +37,32 @@
             <p>No medicines available. Please check again later.</p>
         {% endfor %}
 
-    </div>
-</div>
+    </div>  <!-- end of product-grid -->
+
+    {% if user %}
+        <div class="orders-section">
+            <h3>Your Orders</h3>
+            {% if orders %}
+                {% for o in orders %}
+                    <p>
+                        <strong>Order #{{ o.id }}</strong> |
+                        Amount: ₹{{ o.total_amount }} |
+                        Status:
+                        {% if o.status == "PLACED" %}
+                            <span style="color:orange;">Waiting for admin approval</span>
+                        {% elif o.status == "ACCEPTED" %}
+                            <span style="color:blue;">Order Accepted</span>
+                        {% elif o.status == "DELIVERED" %}
+                            <span style="color:green;">Delivered</span>
+                        {% endif %}
+                    </p>
+                {% endfor %}
+            {% else %}
+                <p>No orders yet.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+
+</div>  <!-- end of container -->
 
 {% include 'medstore_app/footer.html' %}

@@ -8,10 +8,9 @@ from .models import User, Category, Medicine, Order, OrderItem, ContactMessage
 
 ADMIN_EMAIL = "admin@medstore.com"
 
-
-# -------------------------
-# Helper / decorator
-# -------------------------
+# =========================
+# Admin decorator
+# =========================
 def admin_required(view_func):
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
@@ -21,14 +20,23 @@ def admin_required(view_func):
     return wrapper
 
 
-# -------------------------
-# Public pages / auth
-# -------------------------
+# =========================
+# User Pages
+# =========================
 def show_home_page(request):
     products = Medicine.objects.all()
     user_email = request.COOKIES.get('user_email')
     user = User.objects.filter(email=user_email).first()
-    return render(request, 'medstore_app/home.html', {'products': products, 'user': user})
+
+    orders = []
+    if user:
+        orders = Order.objects.filter(user=user).order_by('-id')
+
+    return render(request, 'medstore_app/home.html', {
+        'products': products,
+        'user': user,
+        'orders': orders
+    })
 
 
 def show_login_page(request):
@@ -40,32 +48,26 @@ def show_login_page(request):
 
 
 def login(request):
-    # optional debug prints (remove after testing)
-    print("DEBUG: login called, method=", request.method)
-    print("DEBUG POST:", dict(request.POST))
-
     identifier = request.POST.get('identifier')
     password = request.POST.get('password')
 
     if not identifier or not password:
         return render(request, 'medstore_app/login.html', {"error": "All fields are required"})
 
-    user = User.objects.filter(email=identifier).first() \
-           or User.objects.filter(username=identifier).first() \
-           or User.objects.filter(mobile=identifier).first()
+    user = (
+        User.objects.filter(email=identifier).first()
+        or User.objects.filter(username=identifier).first()
+        or User.objects.filter(mobile=identifier).first()
+    )
 
-    if not user:
-        return render(request, 'medstore_app/login.html', {"error": "User not found. Please signup."})
-
-    if not check_password(password, user.password):
+    if not user or not check_password(password, user.password):
         return render(request, 'medstore_app/login.html', {"error": "Invalid login details"})
 
-    # SUCCESS: set cookie and remove admin cookie (so header shows user-nav)
-    response = redirect('medstore_app:home')
-    response.set_cookie('user_email', user.email, max_age=7 * 24 * 60 * 60)
-    response.delete_cookie('admin_email')
+    resp = redirect('medstore_app:home')
+    resp.set_cookie('user_email', user.email, max_age=7 * 24 * 60 * 60)
+    resp.delete_cookie('admin_email')
     messages.success(request, f"Welcome {user.username}!")
-    return response
+    return resp
 
 
 def show_signup_page(request):
@@ -90,27 +92,27 @@ def signup(request):
     if User.objects.filter(email=email).exists():
         return render(request, 'medstore_app/signup.html', {"error": "Email already exists"})
     if User.objects.filter(username=username).exists():
-        return render(request, 'medstore_app/signup.html', {"error": "Username taken"})
+        return render(request, 'medstore_app/signup.html', {"error": "Username already taken"})
     if User.objects.filter(mobile=mobile).exists():
         return render(request, 'medstore_app/signup.html', {"error": "Mobile already used"})
 
-    hashed_password = make_password(password)
-    user = User.objects.create(username=username, mobile=mobile, email=email, password=hashed_password)
+    user = User.objects.create(
+        username=username,
+        mobile=mobile,
+        email=email,
+        password=make_password(password)
+    )
 
-    # auto-login after signup
     resp = redirect('medstore_app:home')
-    resp.set_cookie('user_email', user.email, max_age=7*24*60*60)
-    resp.delete_cookie('admin_email')
-    messages.success(request, "Account created and logged in! Welcome.")
+    resp.set_cookie('user_email', user.email, max_age=7 * 24 * 60 * 60)
+    messages.success(request, "Account created successfully!")
     return resp
 
-from django.shortcuts import redirect
-from django.contrib import messages
 
 def logout_view(request):
     resp = redirect('medstore_app:home')
     resp.delete_cookie('user_email')
-    messages.info(request, "You have been logged out.")
+    messages.info(request, "Logged out successfully.")
     return resp
 
 
@@ -122,35 +124,36 @@ def show_contact_page(request):
     if request.method == "POST":
         name = request.POST.get('name')
         email = request.POST.get('email')
-        message_text = request.POST.get('message')
-        if not (name and email and message_text):
-            return render(request, 'medstore_app/contact.html', {"error": "Please fill all fields"})
-        ContactMessage.objects.create(name=name, email=email, message=message_text)
-        return render(request, 'medstore_app/contact.html', {"success": "Message sent successfully!"})
+        msg = request.POST.get('message')
+
+        if not (name and email and msg):
+            return render(request, 'medstore_app/contact.html', {"error": "All fields required"})
+
+        ContactMessage.objects.create(name=name, email=email, message=msg)
+        return render(request, 'medstore_app/contact.html', {"success": "Message sent!"})
+
     return render(request, 'medstore_app/contact.html')
 
 
-# -------------------------
-# Admin auth + pages
-# -------------------------
+# =========================
+# Admin Auth
+# =========================
 def admin_login_page(request):
-    if request.method == "GET" and request.COOKIES.get('admin_email'):
-        return redirect('medstore_app:admin_dashboard')
     if request.method == "GET":
+        if request.COOKIES.get('admin_email'):
+            return redirect('medstore_app:admin_dashboard')
         return render(request, 'medstore_app/admin_login.html')
 
-    email = (request.POST.get('email') or "").strip()
-    password = (request.POST.get('password') or "")
-
-    if not email or not password:
-        return render(request, 'medstore_app/admin_login.html', {'error': 'Please fill both fields.'})
+    email = request.POST.get('email')
+    password = request.POST.get('password')
 
     user = User.objects.filter(email=email).first()
+
     if not user or email != ADMIN_EMAIL or not check_password(password, user.password):
-        return render(request, 'medstore_app/admin_login.html', {'error': 'Invalid admin login'})
+        return render(request, 'medstore_app/admin_login.html', {"error": "Invalid admin login"})
 
     resp = redirect('medstore_app:admin_dashboard')
-    resp.set_cookie('admin_email', user.email, max_age=7*24*60*60)
+    resp.set_cookie('admin_email', user.email, max_age=7 * 24 * 60 * 60)
     resp.delete_cookie('user_email')
     return resp
 
@@ -161,144 +164,107 @@ def admin_logout(request):
     return resp
 
 
+# =========================
+# Admin Pages
+# =========================
 @admin_required
 def admin_dashboard(request):
-    total_users = User.objects.count()
-    total_products = Medicine.objects.count()
-    total_orders = Order.objects.count()
-    # NOTE: if model uses 'date' instead of 'created_at', change below to '-date'
-    recent_messages = ContactMessage.objects.all().order_by('-created_at')[:5]
     return render(request, 'medstore_app/admin_dashboard.html', {
-        'total_users': total_users,
-        'total_products': total_products,
-        'total_orders': total_orders,
-        'recent_messages': recent_messages
+        'total_users': User.objects.count(),
+        'total_products': Medicine.objects.count(),
+        'total_orders': Order.objects.count(),
     })
-
-
-@admin_required
-def admin_view_messages(request):
-    msgs = ContactMessage.objects.all().order_by('-created_at')
-    return render(request, 'medstore_app/admin_view_messages.html', {'messages': msgs})
 
 
 @admin_required
 def admin_add_category(request):
     if request.method == "POST":
-        name = (request.POST.get('name') or "").strip()
+        name = request.POST.get('name')
         if not name:
-            return render(request, 'medstore_app/admin_add_category.html', {'error': 'Category name required'})
+            return render(request, 'medstore_app/admin_add_category.html', {"error": "Name required"})
         Category.objects.create(name=name)
-        return render(request, 'medstore_app/admin_add_category.html', {'success': 'Category added successfully'})
+        return render(request, 'medstore_app/admin_add_category.html', {"success": "Category added"})
     return render(request, 'medstore_app/admin_add_category.html')
 
 
 @admin_required
 def admin_add_medicine(request):
     if request.method == "POST":
-        name = (request.POST.get('name') or "").strip()
-        price = request.POST.get('price') or "0"
-        description = request.POST.get('description') or ""
-        cat_id = request.POST.get('category_id') or None
-        stock = request.POST.get('stock') or "0"
-        try:
-            price = float(price)
-        except:
-            price = 0.0
-        try:
-            stock = int(stock)
-        except:
-            stock = 0
-
-        category_obj = None
-        if cat_id:
-            try:
-                category_obj = Category.objects.get(id=int(cat_id))
-            except (Category.DoesNotExist, ValueError):
-                category_obj = None
-
         Medicine.objects.create(
-            name=name,
-            price=price,
-            description=description,
-            category=category_obj,
-            stock=stock
+            name=request.POST.get('name'),
+            price=float(request.POST.get('price') or 0),
+            stock=int(request.POST.get('stock') or 0),
+            category_id=request.POST.get('category_id') or None
         )
         return render(request, 'medstore_app/admin_add_medicine.html', {
-            'success': 'Medicine added', 'categories': Category.objects.all()
+            "success": "Medicine added",
+            "categories": Category.objects.all()
         })
-    return render(request, 'medstore_app/admin_add_medicine.html', {'categories': Category.objects.all()})
 
-
-@admin_required
-def admin_view_orders(request):
-    try:
-        orders = Order.objects.all().order_by('-created_at')
-    except Exception:
-        try:
-            orders = Order.objects.all().order_by('-datetime')
-        except Exception:
-            orders = Order.objects.all().order_by('-id')
-
-    return render(request, 'medstore_app/admin_view_orders.html', {
-        'orders': orders
+    return render(request, 'medstore_app/admin_add_medicine.html', {
+        "categories": Category.objects.all()
     })
 
 
 @admin_required
 def admin_view_orders(request):
-    # duplicate safe guard — keep only one definition; if you see this twice remove one
-    try:
-        orders = Order.objects.all().order_by('-created_at')
-    except Exception:
-        orders = Order.objects.all().order_by('-id')
-    return render(request, 'medstore_app/admin_view_orders.html', {'orders': orders})
+    orders = Order.objects.all().order_by('-id')
+    return render(request, 'medstore_app/admin_orders.html', {'orders': orders})
 
 
+@admin_required
+def admin_accept_order(request, order_id):
+    order = Order.objects.filter(id=order_id).first()
+    if order:
+        order.status = "ACCEPTED"
+        order.save()
+    return redirect('medstore_app:admin_orders')
+
+
+@admin_required
+def admin_deliver_order(request, order_id):
+    order = Order.objects.filter(id=order_id).first()
+    if order:
+        order.status = "DELIVERED"
+        order.save()
+    return redirect('medstore_app:admin_orders')
+
+
+# =========================
+# User Order
+# =========================
 def create_order(request, med_id):
     if request.method != 'POST':
-        messages.error(request, 'Invalid request method for ordering.')
         return redirect('medstore_app:home')
 
     user_email = request.COOKIES.get('user_email')
-    if not user_email:
-        messages.error(request, 'Please login to place order.')
-        return redirect('medstore_app:login')
-
     user = User.objects.filter(email=user_email).first()
+
     if not user:
-        messages.error(request, 'User not found. Please login again.')
+        messages.error(request, "Please login first")
         return redirect('medstore_app:login')
 
     med = Medicine.objects.filter(id=med_id).first()
     if not med:
-        messages.error(request, 'Medicine not found.')
+        messages.error(request, "Medicine not found")
         return redirect('medstore_app:home')
 
-    try:
-        qty = int(request.POST.get('quantity', '1'))
-        if qty < 1:
-            qty = 1
-    except ValueError:
-        qty = 1
-
-    if med.stock is not None and med.stock < qty:
-        messages.error(request, 'Not enough stock available.')
+    qty = int(request.POST.get('quantity', 1))
+    if med.stock < qty:
+        messages.error(request, "Not enough stock")
         return redirect('medstore_app:home')
 
-    try:
-        with transaction.atomic():
-            order = Order.objects.create(user=user, total_amount=0.0, status='placed')
-            item_price = med.price
-            OrderItem.objects.create(order=order, medicine=med, quantity=qty, price=item_price)
-            order.total_amount = item_price * qty
-            order.save()
-            if med.stock is not None:
-                med.stock = max(0, med.stock - qty)
-                med.save()
-    except Exception:
-        messages.error(request, 'Could not place order. Try again.')
-        return redirect('medstore_app:home')
+    with transaction.atomic():
+        order = Order.objects.create(user=user, total_amount=med.price * qty, status="PLACED")
+        OrderItem.objects.create(order=order, medicine=med, quantity=qty, price=med.price)
+        med.stock -= qty
+        med.save()
 
-    messages.success(request, f'Order placed (ID: {order.id}). Admin will process it.')
+    messages.success(request, f"Order placed successfully (ID {order.id})")
     return redirect('medstore_app:home')
+@admin_required
+def admin_view_messages(request):
+    messages_list = ContactMessage.objects.all().order_by('-id')
+    return render(request, 'medstore_app/admin_view_messages.html', {
+        'messages': messages_list
+    })

@@ -6,6 +6,7 @@ class User(models.Model):
     mobile = models.CharField(max_length=15, blank=True, null=True)
     password = models.CharField(max_length=255)  # hashed password
 
+
     def __str__(self):
         return self.username
 
@@ -38,12 +39,16 @@ class ProductImage(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
-    status = models.CharField(max_length=50, default='pending')  # pending / placed / delivered
-    datetime = models.DateTimeField(auto_now_add=True)
+    total_amount = models.FloatField(default=0)
+    status = models.CharField(
+        max_length=20,
+        default="PLACED"
+    )  # PLACED, ACCEPTED, DELIVERED
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Order {self.id} by {self.user.username}"
+        return f"Order #{self.id}"
+
 
 
 class OrderItem(models.Model):

@@ -1,0 +1,33 @@
+{% include 'medstore_app/admin_sidebar.html' %}
+
+<div class="admin-main">
+  <h2>Orders</h2>
+
+  <table border="1" cellpadding="8">
+    <tr>
+      <th>ID</th>
+      <th>User</th>
+      <th>Total</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+
+    {% for o in orders %}
+    <tr>
+      <td>{{ o.id }}</td>
+      <td>{{ o.user.username }}</td>
+      <td>₹{{ o.total_amount }}</td>
+      <td>{{ o.status }}</td>
+      <td>
+        {% if o.status == "PLACED" %}
+          <a href="{% url 'medstore_app:admin_accept_order' o.id %}">Accept</a>
+        {% elif o.status == "ACCEPTED" %}
+          <a href="{% url 'medstore_app:admin_deliver_order' o.id %}">Mark Delivered</a>
+        {% else %}
+          Done
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>

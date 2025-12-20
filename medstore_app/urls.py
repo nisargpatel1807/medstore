@@ -18,6 +18,10 @@ urlpatterns = [
     path('admin-panel/orders/', views.admin_view_orders, name='admin_orders'),
     path('admin-panel/logout/', views.admin_logout, name='admin_logout'),
     path('order/<int:med_id>/', views.create_order, name='create_order'),
+    path('admin-panel/orders/', views.admin_view_orders, name='admin_orders'),
+    path('admin-panel/orders/accept/<int:order_id>/', views.admin_accept_order, name='admin_accept_order'),
+    path('admin-panel/orders/deliver/<int:order_id>/', views.admin_deliver_order, name='admin_deliver_order'),
+
 
 ]
 
