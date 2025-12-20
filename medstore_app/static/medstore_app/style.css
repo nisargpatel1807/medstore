@@ -1,165 +1,24 @@
 
-body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f6f9;
+* {
+    box-sizing: border-box;
 }
 
-
-.container {
-  width: 90%;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-
-
-.site-header {
-  background: #1e73be;
-  color: white;
-  padding: 15px 0;
-  width: 100%;
-  position: relative;
-  left: 0;
-  top: 0;
-}
-
-.site-header .container {
-  width: 95%;
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.site-header .brand {
-  margin: 0;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.site-header nav {
-  display: flex;
-  gap: 18px;
-}
-
-.site-header nav a {
-  color: white;
-  text-decoration: none;
-  font-size: 15px;
-  font-weight: 500;
-}
-
-.site-header nav a:hover {
-  text-decoration: underline;
-}
-
-
-
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  margin-top: 20px;
-}
-
-.center {
-  text-align: center;
-}
-
-.form-box input,
-.form-box textarea {
-  width: 100%;
-  padding: 8px;
-  margin-top: 6px;
-  margin-bottom: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-
-.btn {
-  background: #1e73be;
-  color: white;
-  border: none;
-  padding: 10px 14px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.btn:hover {
-  background: #155b94;
-}
-
-
-.msg {
-  background: #eef7ff;
-  padding: 8px;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  border-left: 3px solid #1e73be;
-  font-size: 14px;
-}
-
-
-.product-grid {
-  margin-top: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.product-card {
-  width: 180px;
-  background: white;
-  padding: 12px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-  text-align: center;
-}
-
-.product-card h3 {
-  margin: 0;
-  font-size: 18px;
-}
-
-.product-card .price {
-  color: #1e73be;
-  font-weight: bold;
-  margin-top: 8px;
-}
-
-
-.site-footer {
-  background: #1e1e1e;
-  color: white;
-  text-align: center;
-  padding: 12px 0;
-  margin-top: 40px;
-  font-size: 14px;
-}
-/* Reset */
 body {
     margin: 0;
-    padding: 0;
-    background: #f2f4f7;
     font-family: Arial, sans-serif;
+    background: #f4f6f9;
 }
 
-/* Container */
 .container {
     width: 95%;
-    max-width: 1100px;
-    margin: 0 auto;
+    max-width: 1200px;
+    margin: auto;
 }
 
-/* Header */
+
 .site-header {
-    background: #1a6bc2;
+    background: #1e73be;
+    color: white;
     padding: 14px 0;
 }
 
@@ -172,14 +31,13 @@ body {
 .brand {
     margin: 0;
     font-size: 26px;
-    color: #fff;
     font-weight: bold;
 }
 
 .site-header nav a {
-    color: #fff;
-    margin-left: 15px;
+    color: white;
     text-decoration: none;
+    margin-left: 15px;
     font-weight: 500;
 }
 
@@ -187,156 +45,131 @@ body {
     text-decoration: underline;
 }
 
-/* Footer */
 .site-footer {
     background: #222;
     color: white;
-    padding: 10px 0;
     text-align: center;
-    margin-top: 30px;
+    padding: 12px 0;
+    margin-top: 40px;
 }
 
-/* Cards (admin + user both) */
 .card {
     background: white;
-    padding: 18px;
+    padding: 20px;
     border-radius: 6px;
     margin-top: 20px;
-    border: 1px solid #e1e1e1;
-}
-
-/* Forms */
-form label {
-    display: block;
-    margin-top: 8px;
-    font-weight: bold;
-}
-
-input, textarea, select {
-    width: 100%;
-    padding: 8px;
-    margin-top: 4px;
-    border: 1px solid #c9c9c9;
-    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 .btn {
-    display: inline-block;
-    background: #1a6bc2;
+    background: #1e73be;
+    color: white;
     padding: 10px 14px;
     border: none;
     border-radius: 4px;
-    color: white;
-    margin-top: 10px;
     cursor: pointer;
-    font-size: 15px;
 }
 
 .btn:hover {
-    background: #0d5aa5;
+    background: #155b94;
 }
 
-/* Messages (success / error) */
 .msg {
-    background: #e9f3ff;
-    border-left: 4px solid #1a6bc2;
+    background: #eef6ff;
     padding: 10px;
+    border-left: 4px solid #1e73be;
     margin-bottom: 10px;
     border-radius: 4px;
 }
 
-/* Product grid */
+
 .product-grid {
     display: flex;
-    flex-wrap: wrap;
     gap: 20px;
+    flex-wrap: wrap;
 }
 
 .product-card {
     width: 200px;
     background: white;
-    padding: 12px;
+    padding: 15px;
     border-radius: 6px;
     border: 1px solid #ddd;
+    text-align: center;
 }
 
 .product-card h3 {
+    margin: 0;
     font-size: 18px;
-    color: #1a6bc2;
 }
 
 .price {
-    font-size: 17px;
     font-weight: bold;
-    color: #1a6bc2;
+    color: #1e73be;
+    margin: 8px 0;
 }
 
-/* ========== ADMIN UI ========== */
 
 .admin-container {
     display: flex;
-    min-height: 90vh;
-    gap: 20px;
+    min-height: calc(100vh - 60px);
+    margin-top: 20px;
 }
 
-/* Sidebar */
+
 .admin-sidebar {
     width: 230px;
-    background: #1f2a40;
-    padding: 20px;
+    background: linear-gradient(180deg, #1e3a8a, #1e40af);
     color: white;
-    border-radius: 8px;
+    padding: 20px;
+    border-radius: 10px;
 }
 
-.admin-logo {
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #2f3b55;
+.admin-sidebar h2 {
+    margin: 0 0 20px 0;
+    font-size: 22px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    padding-bottom: 10px;
 }
 
-.admin-logo h2 {
-    font-size: 20px;
-    margin: 0;
-}
-
-.admin-menu {
+.admin-sidebar ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.admin-menu li {
+.admin-sidebar ul li {
     margin: 12px 0;
 }
 
-.admin-menu li a {
+.admin-sidebar ul li a {
     display: block;
+    color: #e5e7eb;
     text-decoration: none;
-    color: #d6dbe8;
-    padding: 10px 12px;
+    padding: 10px;
     border-radius: 6px;
     transition: 0.2s;
-    font-size: 14px;
 }
 
-.admin-menu li a:hover {
-    background: #2f3b55;
-    color: white;
+.admin-sidebar ul li a:hover {
+    background: rgba(255,255,255,0.15);
 }
 
-/* Main Area */
 .admin-main {
     flex: 1;
-    padding: 20px;
+    margin-left: 20px;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
 }
 
 .admin-title {
-    font-size: 24px;
+    font-size: 26px;
     margin-bottom: 20px;
-    color: #1f2a40;
 }
 
-/* Cards */
+
 .admin-cards {
     display: flex;
     gap: 20px;
@@ -344,34 +177,63 @@ input, textarea, select {
 }
 
 .admin-card {
-    width: 180px;
-    padding: 15px;
-    background: white;
+    width: 200px;
+    padding: 18px;
+    background: #f9fafb;
     border-radius: 10px;
     text-align: center;
-    border: 1px solid #ddd;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    border: 1px solid #e5e7eb;
 }
 
 .admin-card h3 {
-    margin: 0;
-    color: #2c5bbf;
-    margin-bottom: 8px;
+    margin: 0 0 8px;
+    color: #374151;
 }
 
 .admin-card p {
-    font-size: 20px;
-    margin: 0;
+    font-size: 22px;
+    font-weight: bold;
+    color: #1e40af;
 }
 
-/* Recent Messages */
-.admin-section {
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.admin-section h3 {
-    margin-top: 0;
+.admin-table th,
+.admin-table td {
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    text-align: center;
+}
+
+.admin-table th {
+    background: #f3f4f6;
+}
+
+.status-PLACED {
+    color: orange;
+    font-weight: bold;
+}
+
+.status-ACCEPTED {
+    color: #2563eb;
+    font-weight: bold;
+}
+
+.status-DELIVERED {
+    color: green;
+    font-weight: bold;
+}
+
+.admin-action {
+    color: #2563eb;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.admin-action:hover {
+    text-decoration: underline;
 }
